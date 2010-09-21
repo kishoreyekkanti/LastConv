@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/widget28" android:layout_width="fill_parent"
+	android:layout_height="fill_parent" android:layout_x="0px"
+	android:layout_y="0px">
+	<LinearLayout android:id="@+id/widget49"
+		android:layout_width="fill_parent" android:layout_height="fill_parent"
+		android:orientation="vertical">
+		<EditText android:id="@+id/keywordBox" android:singleLine="true"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:layout_marginLeft="5px" android:layout_marginRight="5px"
+			android:layout_marginTop="10px" android:textSize="18sp">
+		</EditText>
+
+		<Button android:id="@+id/searchButton" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:layout_marginLeft="30px"
+			android:layout_marginRight="30px" android:text="Search">
+		</Button>
+	</LinearLayout>
+</ScrollView>
