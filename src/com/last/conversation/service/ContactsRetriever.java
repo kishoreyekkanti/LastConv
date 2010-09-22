@@ -61,16 +61,16 @@ public class ContactsRetriever {
 
 	private ArrayList<UserContacts> extract(Cursor contacts) {
 		ArrayList<UserContacts> userContacts = new ArrayList<UserContacts>();
-		if (contacts.getCount() > 0) {
+		if (contacts.moveToFirst()) {
 			do {
 				UserContacts uContact = new UserContacts();
-				String id = setUserName(contacts, uContact);
+				setUserNameAndContactId(contacts, uContact);
 				if (isContactHavePhoneNumber(contacts)) {
 					Cursor pCur = contentResolver.query(
 										ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
 										null,
 										ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", 
-										new String[] { id }, 
+										new String[] { String.valueOf(uContact.getId()) }, 
 										null);
 					setPhoneNumber(uContact, pCur);
 					pCur.close();
@@ -84,10 +84,10 @@ public class ContactsRetriever {
 	}
 
 	private void setCallTypes(UserContacts uContact) {
-		Cursor managedCursor = getCallLogFor(uContact.getPhoneNumber());
+		Cursor managedCursor = getCallLogFor(uContact.getId());
 		int typeColumn = managedCursor.getColumnIndex(CallLog.Calls.TYPE);
 		Log.d(LOG_TAG,"NAME::"+uContact.getDisplayName()+" MANAGED CURSOR ::"+managedCursor.getCount());
-		while (managedCursor.moveToNext()) {
+		if (managedCursor.moveToFirst()) {
 			int type = Integer.parseInt(managedCursor.getString(typeColumn));
 			try {
 				switch (type) {
@@ -104,18 +104,18 @@ public class ContactsRetriever {
 			} catch (NumberFormatException ex) {
 				Log.e(LOG_TAG,ex.getMessage());
 			}
-		}
+	  }
 		managedCursor.close();
 	}
 
-	private Cursor getCallLogFor(String phoneNumber) {
-		String[] projection = new String[] {BaseColumns._ID,CallLog.Calls.TYPE, CallLog.Calls.DATE };
+	private Cursor getCallLogFor(int contactId) {
+		String[] projection = new String[] {BaseColumns._ID,CallLog.Calls.TYPE, CallLog.Calls.DATE, CallLog.Calls.NUMBER, CallLog.Calls.CACHED_NAME };
 		Cursor managedCursor = contentResolver.query(
-								CallLog.Calls.CONTENT_URI, 
+				                android.provider.CallLog.Calls.CONTENT_URI, 
 								projection, 
-								CallLog.Calls.NUMBER +" = ? ",
-								new String[]{phoneNumber},
-								null);
+								CallLog.Calls._ID +" = ? ",
+								new String[]{String.valueOf(contactId)},
+								CallLog.Calls.DATE + " DESC ");
 		return managedCursor;
 	}
 
@@ -137,15 +137,15 @@ public class ContactsRetriever {
 		return Integer.parseInt(contacts.getString(contacts.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0;
 	}
 
-	private String setUserName(Cursor contacts, UserContacts uContact) {
+	private void setUserNameAndContactId(Cursor contacts, UserContacts uContact) {
 		String id = contacts.getString(contacts
 				.getColumnIndex(ContactsContract.Contacts._ID));
 		String name = contacts
 				.getString(contacts
 						.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
 		uContact.setDisplayName(name);
-		Log.d(LOG_TAG, "ID:)::" + id + "  NAME::" + name);
-		return id;
+		uContact.setId(Integer.parseInt(id));
+		Log.d(LOG_TAG, "CONTACT ID:)::" + id + "  NAME::" + name);
 	}
 
 }

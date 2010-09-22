@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class UserContacts {
 	
+	int id;
 	String phoneNumber;
 	String displayName;
 	Date outGoing;
@@ -14,6 +15,12 @@ public class UserContacts {
 	}
 	public void setOutGoing(Date outGoing) {
 		this.outGoing = outGoing;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
 	}
 	public Date getIncoming() {
 		return incoming;
