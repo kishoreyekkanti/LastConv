@@ -40,15 +40,19 @@ public class ContactsCustomAdapter extends ArrayAdapter<UserContacts>{
 	}
 
 	private void prepareTextView(View convertView, UserContacts contact) {
+		//TODO will refactor this code with appropriate images in future
 		if(contact != null) {
 			TextView name = (TextView) convertView.findViewById(R.id.name);
 			TextView phoneNumber = (TextView) convertView.findViewById(R.id.phone_number);
 			TextView incoming = (TextView) convertView.findViewById(R.id.incoming);
-			TextView outgoing = (TextView) convertView.findViewById(R.id.outgoind);
+			TextView outgoing = (TextView) convertView.findViewById(R.id.outgoing);
 			TextView missed = (TextView) convertView.findViewById(R.id.missed);
+			TextView inbox = (TextView) convertView.findViewById(R.id.inbox);
+			TextView send = (TextView) convertView.findViewById(R.id.send);
 			name.setText(contact.getDisplayName());
 			phoneNumber.setText(contact.getPhoneNumber());
-			//TODO will refactor this code with appropriate images in future
+			inbox.setText("INBOX::"+contact.getReceivedMessage());
+			send.setText("SENT::"+contact.getSentMessage());
 			incoming.setText("INCOMING::");
 			outgoing.setText("OUTGOING::");
 			missed.setText("MISSED::");

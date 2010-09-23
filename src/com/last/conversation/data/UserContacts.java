@@ -10,6 +10,27 @@ public class UserContacts {
 	Date outGoing;
 	Date incoming;
 	Date missed;
+	String sentMessage = "";
+	String receivedMessage = "";
+	String draftMessage = "";
+	public String getDraftMessage() {
+		return draftMessage;
+	}
+	public void setDraftMessage(String draftMessage) {
+		this.draftMessage = draftMessage;
+	}
+	public String getSentMessage() {
+		return sentMessage;
+	}
+	public void setSentMessage(String sentMessage) {
+		this.sentMessage = sentMessage;
+	}
+	public String getReceivedMessage() {
+		return receivedMessage;
+	}
+	public void setReceivedMessage(String receivedMessage) {
+		this.receivedMessage = receivedMessage;
+	}
 	public Date getOutGoing() {
 		return outGoing;
 	}

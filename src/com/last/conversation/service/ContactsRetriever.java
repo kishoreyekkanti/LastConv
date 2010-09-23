@@ -2,6 +2,7 @@ package com.last.conversation.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import android.content.ContentResolver;
 import android.database.Cursor;
@@ -18,10 +19,16 @@ public class ContactsRetriever {
 	private String LOG_TAG = "ContactsRetriever";
 	private String[] keywords;
 	private ContentResolver contentResolver;
-
+	private static HashMap<String,String> SMS_URI = new HashMap<String,String>();
+	protected static String _ID = "_id";
+	protected static String BODY = "body";
+	protected static String DATE = "date";
+	
 	public ContactsRetriever(String[] keywords, ContentResolver contentResolver) {
 		this.keywords = keywords;
 		this.contentResolver = contentResolver;
+		SMS_URI.put("INBOX_URI", "content://sms/inbox");
+		SMS_URI.put("SENT_URI", "content://sms/sent");
 	}
 
 	public ArrayList<UserContacts> fetchContacts() {
@@ -75,6 +82,7 @@ public class ContactsRetriever {
 					setPhoneNumber(uContact, pCur);
 					pCur.close();
 					setCallTypes(uContact);
+					setSMS(uContact);
 				}
 				Log.d(LOG_TAG,"USER CONTACT::"+userContacts);
 				userContacts.add(uContact);
@@ -83,11 +91,50 @@ public class ContactsRetriever {
 		return userContacts;
 	}
 
+	private void setSMS(UserContacts uContact) {
+		uContact.setSentMessage(getSMSFor(uContact.getId(),SMS_URI.get("SENT_URI")));
+		uContact.setReceivedMessage(getSMSFor(uContact.getId(),SMS_URI.get("INBOX_URI")));
+	}
+
+	private String getSMSFor(int id,String contentURI) {
+		Cursor smsCursor = contentResolver.query(getContentURI(contentURI), fieldsToFetch(),
+					whereClause(id), selectionArguments(), sortOrder());
+
+		int bodyIndex = smsCursor.getColumnIndex(BODY);
+		String message = "";
+		if(smsCursor!=null && smsCursor.moveToFirst()){
+			message = smsCursor.getString(bodyIndex);
+		}
+		Log.d(LOG_TAG,"CONTENT URI::"+contentURI+" MESSAGE:: "+message);
+		smsCursor.close();
+		return message;
+	}
+	
+	protected Uri getContentURI(String contentURI) {
+		return Uri.parse(contentURI);
+	}
+
+	protected String[] fieldsToFetch() {
+		return new String[] { _ID, BODY };
+	}
+
+	protected String whereClause(int contactId) {
+		return " body is not null and _id="+contactId;
+	}
+
+	protected String sortOrder() {
+		return null;
+	}
+
+	protected String[] selectionArguments() {
+		return null;
+	}
+
 	private void setCallTypes(UserContacts uContact) {
 		Cursor managedCursor = getCallLogFor(uContact.getId());
 		int typeColumn = managedCursor.getColumnIndex(CallLog.Calls.TYPE);
 		Log.d(LOG_TAG,"NAME::"+uContact.getDisplayName()+" MANAGED CURSOR ::"+managedCursor.getCount());
-		if (managedCursor.moveToFirst()) {
+		if (managedCursor!=null && managedCursor.moveToFirst()) {
 			int type = Integer.parseInt(managedCursor.getString(typeColumn));
 			try {
 				switch (type) {
