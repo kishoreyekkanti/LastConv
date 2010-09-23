@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.last.converation.R;
@@ -49,19 +50,21 @@ public class ContactsCustomAdapter extends ArrayAdapter<UserContacts>{
 			TextView missed = (TextView) convertView.findViewById(R.id.missed);
 			TextView inbox = (TextView) convertView.findViewById(R.id.inbox);
 			TextView send = (TextView) convertView.findViewById(R.id.send);
+			ImageView imageView = (ImageView) convertView.findViewById(R.id.image);
 			name.setText(contact.getDisplayName());
 			phoneNumber.setText(contact.getPhoneNumber());
-			inbox.setText("INBOX::"+contact.getReceivedMessage());
-			send.setText("SENT::"+contact.getSentMessage());
-			incoming.setText("INCOMING::");
-			outgoing.setText("OUTGOING::");
-			missed.setText("MISSED::");
+			inbox.setText(contact.getReceivedMessage());
+			send.setText(contact.getSentMessage());
+			imageView.setImageResource(R.drawable.user);
+			incoming.setText("");
+			outgoing.setText("");
+			missed.setText("");
 			if(contact.getIncoming()!=null)
-     			incoming.setText("INCOMING::"+DateFormat.getDateTimeInstance().format(contact.getIncoming()));
+     			incoming.setText(DateFormat.getDateTimeInstance().format(contact.getIncoming()));
 			if(contact.getOutGoing()!=null)
-				outgoing.setText("OUTGOING::"+DateFormat.getDateTimeInstance().format(contact.getOutGoing()));
+				outgoing.setText(DateFormat.getDateTimeInstance().format(contact.getOutGoing()));
 			if(contact.getMissed()!=null)
-				missed.setText("MISSED::"+DateFormat.getDateTimeInstance().format(contact.getMissed()));
+				missed.setText(DateFormat.getDateTimeInstance().format(contact.getMissed()));
 				
 		}
 	}
