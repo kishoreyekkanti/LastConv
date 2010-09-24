@@ -19,11 +19,11 @@ public class ContactsRetriever {
 	private String LOG_TAG = "ContactsRetriever";
 	private String[] keywords;
 	private ContentResolver contentResolver;
-	private static HashMap<String,String> SMS_URI = new HashMap<String,String>();
+	private static HashMap<String, String> SMS_URI = new HashMap<String, String>();
 	protected static String _ID = "_id";
 	protected static String BODY = "body";
 	protected static String DATE = "date";
-	
+
 	public ContactsRetriever(String[] keywords, ContentResolver contentResolver) {
 		this.keywords = keywords;
 		this.contentResolver = contentResolver;
@@ -35,45 +35,42 @@ public class ContactsRetriever {
 		Cursor contacts = fetchContacts();
 		try {
 			if (contacts != null && contacts.moveToFirst()) {
-				return extract(contacts,true);
+				return extract(contacts, true);
 			}
 		} finally {
 			contacts.close();
 		}
 		return new ArrayList<UserContacts>();
 	}
- public String[] fetchContactsForKeywords(){
-	 Cursor contacts = fetchContacts();
-	 ArrayList<UserContacts> uContacts = new ArrayList<UserContacts>();
+
+	public String[] fetchContactsForKeywords() {
+		Cursor contacts = fetchContacts();
+		ArrayList<UserContacts> uContacts = new ArrayList<UserContacts>();
 		try {
 			if (contacts != null && contacts.moveToFirst()) {
-				uContacts=  extract(contacts,false);
+				uContacts = extract(contacts, false);
 			}
 		} finally {
 			contacts.close();
 		}
 		String[] names = new String[uContacts.size()];
-		for(int i=0;i<uContacts.size();i++){
+		for (int i = 0; i < uContacts.size(); i++) {
 			names[i] = uContacts.get(i).getDisplayName();
 		}
-	 return names;
- }
+		return names;
+	}
+
 	private Cursor fetchContacts() {
 		Uri uri = ContactsContract.Contacts.CONTENT_URI;
-		String[] projection = new String[] { 
-				              ContactsContract.Contacts._ID,
-							  ContactsContract.Contacts.DISPLAY_NAME,
-							  ContactsContract.Contacts.HAS_PHONE_NUMBER,
-							  ContactsContract.Contacts.LAST_TIME_CONTACTED };
+		String[] projection = new String[] { ContactsContract.Contacts._ID,
+				ContactsContract.Contacts.DISPLAY_NAME,
+				ContactsContract.Contacts.HAS_PHONE_NUMBER,
+				ContactsContract.Contacts.LAST_TIME_CONTACTED };
 		String[] selectionArgs = new String[] { createQueryableKeyword(keywords) };
 		String sortOrder = null;
-		Cursor contacts = null;
-			contacts = contentResolver.query(
-						uri, 
-						projection,
-					    ContactsContract.Contacts.DISPLAY_NAME + " LIKE ? ",
-					    selectionArgs, 
-					    sortOrder);
+		Cursor contacts = contentResolver.query(uri, projection,
+				ContactsContract.Contacts.DISPLAY_NAME + " LIKE ? ",
+				selectionArgs, sortOrder);
 		return contacts;
 	}
 
@@ -86,54 +83,57 @@ public class ContactsRetriever {
 		return keyword.toString();
 	}
 
-	private ArrayList<UserContacts> extract(Cursor contacts,boolean shouldFetchPhoneDetails) {
+	private ArrayList<UserContacts> extract(Cursor contacts,
+			boolean shouldFetchPhoneDetails) {
 		ArrayList<UserContacts> userContacts = new ArrayList<UserContacts>();
 		if (contacts.moveToFirst()) {
 			do {
 				UserContacts uContact = new UserContacts();
 				setDisplayNameAndContactId(contacts, uContact);
-				if (isContactHavePhoneNumber(contacts) && shouldFetchPhoneDetails) {
+				if (isContactHavePhoneNumber(contacts)
+						&& shouldFetchPhoneDetails) {
 					Cursor pCur = fetchPhoneNumber(uContact.getId());
-					setPhoneNumber(uContact, pCur);
+					setCallDetails(uContact, pCur);
 					pCur.close();
 					setCallTypes(uContact);
 					setSMS(uContact);
 				}
-				Log.d(LOG_TAG,"USER CONTACT::"+userContacts);
+				Log.d(LOG_TAG, "USER CONTACT::" + userContacts);
 				userContacts.add(uContact);
 			} while (contacts.moveToNext());
 		}
 		return userContacts;
 	}
-	
-	private Cursor fetchPhoneNumber(int contactId){
+
+	private Cursor fetchPhoneNumber(int contactId) {
 		return contentResolver.query(
-				ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-				null,
-				ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", 
-				new String[] { String.valueOf(contactId) }, 
-				null);
+				ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+				ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+				new String[] { String.valueOf(contactId) }, null);
 	}
 
 	private void setSMS(UserContacts uContact) {
-		uContact.setSentMessage(getSMSFor(uContact.getId(),SMS_URI.get("SENT_URI")));
-		uContact.setReceivedMessage(getSMSFor(uContact.getId(),SMS_URI.get("INBOX_URI")));
+		uContact.setSentMessage(getSMSFor(uContact.getId(), SMS_URI
+				.get("SENT_URI")));
+		uContact.setReceivedMessage(getSMSFor(uContact.getId(), SMS_URI
+				.get("INBOX_URI")));
 	}
 
-	private String getSMSFor(int id,String contentURI) {
-		Cursor smsCursor = contentResolver.query(getContentURI(contentURI), fieldsToFetch(),
-					whereClause(id), selectionArguments(), sortOrder());
+	private String getSMSFor(int id, String contentURI) {
+		Cursor smsCursor = contentResolver.query(getContentURI(contentURI),
+				fieldsToFetch(), whereClause(id), selectionArguments(),
+				sortOrder());
 
 		int bodyIndex = smsCursor.getColumnIndex(BODY);
 		String message = "";
-		if(smsCursor!=null && smsCursor.moveToFirst()){
+		if (smsCursor != null && smsCursor.moveToFirst()) {
 			message = smsCursor.getString(bodyIndex);
 		}
-		Log.d(LOG_TAG,"CONTENT URI::"+contentURI+" MESSAGE:: "+message);
+		Log.d(LOG_TAG, "CONTENT URI::" + contentURI + " MESSAGE:: " + message);
 		smsCursor.close();
 		return message;
 	}
-	
+
 	protected Uri getContentURI(String contentURI) {
 		return Uri.parse(contentURI);
 	}
@@ -143,7 +143,7 @@ public class ContactsRetriever {
 	}
 
 	protected String whereClause(int contactId) {
-		return " body is not null and _id="+contactId;
+		return " body is not null and _id=" + contactId;
 	}
 
 	protected String sortOrder() {
@@ -157,8 +157,9 @@ public class ContactsRetriever {
 	private void setCallTypes(UserContacts uContact) {
 		Cursor managedCursor = getCallLogFor(uContact.getId());
 		int typeColumn = managedCursor.getColumnIndex(CallLog.Calls.TYPE);
-		Log.d(LOG_TAG,"NAME::"+uContact.getDisplayName()+" MANAGED CURSOR ::"+managedCursor.getCount());
-		if (managedCursor!=null && managedCursor.moveToFirst()) {
+		Log.d(LOG_TAG, "NAME::" + uContact.getDisplayName()
+				+ " MANAGED CURSOR ::" + managedCursor.getCount());
+		if (managedCursor != null && managedCursor.moveToFirst()) {
 			int type = Integer.parseInt(managedCursor.getString(typeColumn));
 			try {
 				switch (type) {
@@ -173,47 +174,52 @@ public class ContactsRetriever {
 					break;
 				}
 			} catch (NumberFormatException ex) {
-				Log.e(LOG_TAG,ex.getMessage());
+				Log.e(LOG_TAG, ex.getMessage());
 			}
-	  }
+		}
 		managedCursor.close();
 	}
 
 	private Cursor getCallLogFor(int contactId) {
-		String[] projection = new String[] {BaseColumns._ID,CallLog.Calls.TYPE, CallLog.Calls.DATE, CallLog.Calls.NUMBER, CallLog.Calls.CACHED_NAME };
+		String[] projection = new String[] { BaseColumns._ID,
+				CallLog.Calls.TYPE, CallLog.Calls.DATE, CallLog.Calls.NUMBER,
+				CallLog.Calls.CACHED_NAME };
 		Cursor managedCursor = contentResolver.query(
-				                android.provider.CallLog.Calls.CONTENT_URI, 
-								projection, 
-								CallLog.Calls._ID +" = ? ",
-								new String[]{String.valueOf(contactId)},
-								CallLog.Calls.DATE + " DESC ");
+				android.provider.CallLog.Calls.CONTENT_URI, projection,
+				CallLog.Calls._ID + " = ? ", new String[] { String
+						.valueOf(contactId) }, CallLog.Calls.DATE + " DESC ");
 		return managedCursor;
 	}
 
 	private Date getCallDate(Cursor managedCursor) {
-		return new Date(managedCursor.getLong(managedCursor.getColumnIndex(Calls.DATE)));
+		return new Date(managedCursor.getLong(managedCursor
+				.getColumnIndex(Calls.DATE)));
 	}
 
-	private void setPhoneNumber(UserContacts uContact, Cursor pCur) {
+	private void setCallDetails(UserContacts uContact, Cursor pCur) {
 		while (pCur.moveToNext()) {
 			String number = pCur
 					.getString(pCur
 							.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+			Date lastContacted = new Date(pCur.getLong(pCur.getColumnIndex(
+								 ContactsContract.CommonDataKinds.Phone.LAST_TIME_CONTACTED)));
 			uContact.setPhoneNumber(number);
+			uContact.setLastContacted(lastContacted);
 			Log.d(LOG_TAG, "Number::" + number);
 		}
 	}
 
 	private boolean isContactHavePhoneNumber(Cursor contacts) {
-		return Integer.parseInt(contacts.getString(contacts.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0;
+		return Integer.parseInt(contacts.getString(contacts
+				.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0;
 	}
 
-	private void setDisplayNameAndContactId(Cursor contacts, UserContacts uContact) {
+	private void setDisplayNameAndContactId(Cursor contacts,
+			UserContacts uContact) {
 		String id = contacts.getString(contacts
 				.getColumnIndex(ContactsContract.Contacts._ID));
-		String name = contacts
-				.getString(contacts
-						.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+		String name = contacts.getString(contacts
+				.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
 		uContact.setDisplayName(name);
 		uContact.setId(Integer.parseInt(id));
 		Log.d(LOG_TAG, "CONTACT ID:)::" + id + "  NAME::" + name);

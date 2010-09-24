@@ -19,7 +19,7 @@ import com.last.conversation.data.UserContacts;
 public class ContactsCustomAdapter extends ArrayAdapter<UserContacts>{
 
 	ArrayList<UserContacts> userContacts  = new ArrayList<UserContacts>();
-	LayoutInflater mInflater = null;
+	LayoutInflater mInflater;
 	private final static String LOG_TAG = "Contacts Custom Adapter";
 	public ContactsCustomAdapter(Context context, int textViewResourceId,
 			ArrayList<UserContacts> userContacts) {
@@ -41,7 +41,7 @@ public class ContactsCustomAdapter extends ArrayAdapter<UserContacts>{
 	}
 
 	private void prepareTextView(View convertView, UserContacts contact) {
-		//TODO will refactor this code with appropriate images in future
+		//TODO Need to refactor this code
 		if(contact != null) {
 			TextView name = (TextView) convertView.findViewById(R.id.name);
 			TextView phoneNumber = (TextView) convertView.findViewById(R.id.phone_number);

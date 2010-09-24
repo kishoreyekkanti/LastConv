@@ -10,6 +10,13 @@ public class UserContacts {
 	Date outGoing;
 	Date incoming;
 	Date missed;
+	Date lastContacted;
+	public Date getLastContacted() {
+		return lastContacted;
+	}
+	public void setLastContacted(Date lastContacted) {
+		this.lastContacted = lastContacted;
+	}
 	String sentMessage = "";
 	String receivedMessage = "";
 	String draftMessage = "";
