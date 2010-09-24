@@ -6,12 +6,9 @@
 	<LinearLayout android:id="@+id/widget49"
 		android:layout_width="fill_parent" android:layout_height="fill_parent"
 		android:orientation="vertical">
-		<EditText android:id="@+id/keywordBox" android:singleLine="true"
+		<AutoCompleteTextView android:id="@+id/autocomplete_contact"
 			android:layout_width="fill_parent" android:layout_height="wrap_content"
-			android:layout_marginLeft="5px" android:layout_marginRight="5px"
-			android:layout_marginTop="10px" android:textSize="18sp">
-		</EditText>
-
+			android:layout_marginLeft="5dp" />
 		<Button android:id="@+id/searchButton" android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:layout_marginLeft="30px"
 			android:layout_marginRight="30px" android:text="Search">

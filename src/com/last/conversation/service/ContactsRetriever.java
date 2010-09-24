@@ -31,7 +31,34 @@ public class ContactsRetriever {
 		SMS_URI.put("SENT_URI", "content://sms/sent");
 	}
 
-	public ArrayList<UserContacts> fetchContacts() {
+	public ArrayList<UserContacts> fetchLastConversationDetails() {
+		Cursor contacts = fetchContacts();
+		try {
+			if (contacts != null && contacts.moveToFirst()) {
+				return extract(contacts,true);
+			}
+		} finally {
+			contacts.close();
+		}
+		return new ArrayList<UserContacts>();
+	}
+ public String[] fetchContactsForKeywords(){
+	 Cursor contacts = fetchContacts();
+	 ArrayList<UserContacts> uContacts = new ArrayList<UserContacts>();
+		try {
+			if (contacts != null && contacts.moveToFirst()) {
+				uContacts=  extract(contacts,false);
+			}
+		} finally {
+			contacts.close();
+		}
+		String[] names = new String[uContacts.size()];
+		for(int i=0;i<uContacts.size();i++){
+			names[i] = uContacts.get(i).getDisplayName();
+		}
+	 return names;
+ }
+	private Cursor fetchContacts() {
 		Uri uri = ContactsContract.Contacts.CONTENT_URI;
 		String[] projection = new String[] { 
 				              ContactsContract.Contacts._ID,
@@ -41,20 +68,13 @@ public class ContactsRetriever {
 		String[] selectionArgs = new String[] { createQueryableKeyword(keywords) };
 		String sortOrder = null;
 		Cursor contacts = null;
-		try {
 			contacts = contentResolver.query(
 						uri, 
 						projection,
 					    ContactsContract.Contacts.DISPLAY_NAME + " LIKE ? ",
 					    selectionArgs, 
 					    sortOrder);
-			if (contacts != null && contacts.moveToFirst()) {
-				return extract(contacts);
-			}
-		} finally {
-			contacts.close();
-		}
-		return new ArrayList<UserContacts>();
+		return contacts;
 	}
 
 	private String createQueryableKeyword(String[] keywords) {
@@ -66,19 +86,14 @@ public class ContactsRetriever {
 		return keyword.toString();
 	}
 
-	private ArrayList<UserContacts> extract(Cursor contacts) {
+	private ArrayList<UserContacts> extract(Cursor contacts,boolean shouldFetchPhoneDetails) {
 		ArrayList<UserContacts> userContacts = new ArrayList<UserContacts>();
 		if (contacts.moveToFirst()) {
 			do {
 				UserContacts uContact = new UserContacts();
-				setUserNameAndContactId(contacts, uContact);
-				if (isContactHavePhoneNumber(contacts)) {
-					Cursor pCur = contentResolver.query(
-										ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-										null,
-										ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", 
-										new String[] { String.valueOf(uContact.getId()) }, 
-										null);
+				setDisplayNameAndContactId(contacts, uContact);
+				if (isContactHavePhoneNumber(contacts) && shouldFetchPhoneDetails) {
+					Cursor pCur = fetchPhoneNumber(uContact.getId());
 					setPhoneNumber(uContact, pCur);
 					pCur.close();
 					setCallTypes(uContact);
@@ -89,6 +104,15 @@ public class ContactsRetriever {
 			} while (contacts.moveToNext());
 		}
 		return userContacts;
+	}
+	
+	private Cursor fetchPhoneNumber(int contactId){
+		return contentResolver.query(
+				ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+				null,
+				ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", 
+				new String[] { String.valueOf(contactId) }, 
+				null);
 	}
 
 	private void setSMS(UserContacts uContact) {
@@ -184,7 +208,7 @@ public class ContactsRetriever {
 		return Integer.parseInt(contacts.getString(contacts.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0;
 	}
 
-	private void setUserNameAndContactId(Cursor contacts, UserContacts uContact) {
+	private void setDisplayNameAndContactId(Cursor contacts, UserContacts uContact) {
 		String id = contacts.getString(contacts
 				.getColumnIndex(ContactsContract.Contacts._ID));
 		String name = contacts

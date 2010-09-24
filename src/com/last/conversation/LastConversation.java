@@ -43,7 +43,7 @@ public class LastConversation extends Activity {
 		
 		@Override
 		protected ArrayList<UserContacts> doInBackground(Void... params) {
-			ArrayList<UserContacts> contactsReturned = LastConversation.this.contactsRetriever.fetchContacts();
+			ArrayList<UserContacts> contactsReturned = LastConversation.this.contactsRetriever.fetchLastConversationDetails();
 			Log.d(LOG_TAG, "CONTACTS RETURNED::"+contactsReturned.size());
 			return contactsReturned;
 		}
