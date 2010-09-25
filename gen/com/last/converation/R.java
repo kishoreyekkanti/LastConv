@@ -33,7 +33,6 @@ public final class R {
         public static final int outgoing=0x7f050007;
         public static final int outgoingImage=0x7f050006;
         public static final int phone_number=0x7f050003;
-        public static final int searchButton=0x7f050011;
         public static final int send=0x7f05000c;
         public static final int widget28=0x7f05000e;
         public static final int widget49=0x7f05000f;

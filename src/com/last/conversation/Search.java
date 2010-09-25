@@ -1,16 +1,15 @@
 package com.last.conversation;
 
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.EditText;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.last.converation.R;
 import com.last.conversation.service.ContactsRetriever;
@@ -19,37 +18,51 @@ public class Search extends Activity {
 
 	private static final String LOG_TAG = "Search";
 	private ContactsRetriever contactsRetriever;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		setUIBindings();
 		setAutocompleteTextView();
 		Log.d(LOG_TAG, "Created an instance of SEARCH activity");
 	}
 
 	private void setAutocompleteTextView() {
 		AutoCompleteTextView textView = (AutoCompleteTextView) findViewById(R.id.autocomplete_contact);
-		String[] keywords = new String[]{textView.getText().toString()};
-		contactsRetriever = new ContactsRetriever(keywords,getContentResolver());
+		setUIBindings(textView);
+		String[] keywords = new String[] { textView.getText().toString() };
+		contactsRetriever = new ContactsRetriever(keywords,
+				getContentResolver());
 		String[] contacts = contactsRetriever.fetchContactsForKeywords();
-		ArrayAdapter<String> contactListAdapter = new ArrayAdapter<String>(this, R.layout.autocomplete_text, contacts);
+		ArrayAdapter<String> contactListAdapter = new ArrayAdapter<String>(
+				this, R.layout.autocomplete_text, contacts);
 		textView.setAdapter(contactListAdapter);
 	}
 
-	private void setUIBindings() {
-		Button button = (Button) findViewById(R.id.searchButton);
-		button.setOnClickListener(searchButtonClickListener);
+	private void setUIBindings(AutoCompleteTextView textView) {
+		textView.setOnItemClickListener(autoCompleteItemClickListener);
+		textView.setOnClickListener(autoCompleteClickListener);
 	}
 
-	private OnClickListener searchButtonClickListener = new OnClickListener() {
+	private OnItemClickListener autoCompleteItemClickListener = new OnItemClickListener() {
 		@Override
-		public void onClick(View searchView) {
-			EditText textBox = (EditText) findViewById(R.id.autocomplete_contact);
-			String searchBoxText = textBox.getText().toString();
-			createNewActivityToListMessagesFrom(new String[] { searchBoxText });
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+			searchForContacts();
 		}
 	};
+	private OnClickListener autoCompleteClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			searchForContacts();
+		}
+	};
+
+	private void searchForContacts() {
+		AutoCompleteTextView textView = (AutoCompleteTextView) findViewById(R.id.autocomplete_contact);
+		String[] keywords = new String[] { textView.getText().toString() };
+		createNewActivityToListMessagesFrom(keywords);
+	}
 
 	private void createNewActivityToListMessagesFrom(String[] keywords) {
 		Intent listingActivity = new Intent(Search.this, LastConversation.class);
