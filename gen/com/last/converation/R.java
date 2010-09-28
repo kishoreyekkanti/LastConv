@@ -19,23 +19,22 @@ public final class R {
         public static final int user=0x7f020005;
     }
     public static final class id {
-        public static final int autocomplete_contact=0x7f050010;
-        public static final int contact_list_view=0x7f05000d;
+        public static final int autocomplete_contact=0x7f05000f;
+        public static final int contact_list_view=0x7f05000c;
         public static final int contact_name=0x7f050000;
         public static final int image=0x7f050001;
-        public static final int inbox=0x7f05000b;
-        public static final int inboxImage=0x7f05000a;
-        public static final int incoming=0x7f050005;
-        public static final int incomingImage=0x7f050004;
-        public static final int missed=0x7f050009;
-        public static final int missedImage=0x7f050008;
+        public static final int inbox=0x7f05000a;
+        public static final int inboxImage=0x7f050009;
+        public static final int incoming=0x7f050004;
+        public static final int incomingImage=0x7f050003;
+        public static final int missed=0x7f050008;
+        public static final int missedImage=0x7f050007;
         public static final int name=0x7f050002;
-        public static final int outgoing=0x7f050007;
-        public static final int outgoingImage=0x7f050006;
-        public static final int phone_number=0x7f050003;
-        public static final int send=0x7f05000c;
-        public static final int widget28=0x7f05000e;
-        public static final int widget49=0x7f05000f;
+        public static final int outgoing=0x7f050006;
+        public static final int outgoingImage=0x7f050005;
+        public static final int send=0x7f05000b;
+        public static final int widget28=0x7f05000d;
+        public static final int widget49=0x7f05000e;
     }
     public static final class layout {
         public static final int autocomplete_text=0x7f030000;

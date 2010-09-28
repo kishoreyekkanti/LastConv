@@ -1,107 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical" android:layout_width="wrap_content"
-	android:layout_height="wrap_content">
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:stretchColumns="1">
 
-	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		android:layout_width="wrap_content" android:layout_height="wrap_content">
+	<TableRow>
 		<ImageView android:id="@+id/image" android:layout_width="wrap_content"
 			android:layout_height="fill_parent" android:scaleType="fitStart" />
-		<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			android:orientation="vertical" 
-			android:layout_width="wrap_content" android:layout_height="wrap_content">
-
-			<TextView android:id="@+id/name" android:layout_width="wrap_content"
-				android:layout_height="wrap_content" 
-				android:textSize="14dip" android:typeface="sans"
-				android:shadowColor="#FFFFFF" />
-			<TextView android:id="@+id/phone_number"
-				android:layout_width="wrap_content" android:layout_height="wrap_content"
-				android:textSize="14dip"
-				android:typeface="sans" android:shadowColor="#FFFFFF" />
-		</LinearLayout>
-	</LinearLayout>
-
-	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		 android:layout_width="wrap_content"
-		android:layout_height="wrap_content">
+		<TextView android:id="@+id/name" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:textSize="14dip"
+			android:typeface="sans" android:shadowColor="#FFFFFF" android:gravity="left"/>
+	</TableRow>
+	<TableRow>
 		<ImageView android:id="@+id/incomingImage"
 			android:layout_width="wrap_content" android:layout_height="fill_parent"
-			 android:src="@drawable/incoming" android:scaleType="fitStart"/>
-		<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			android:orientation="vertical" 
-			android:layout_width="wrap_content" android:layout_height="wrap_content">
-			<TextView android:id="@+id/incoming" android:layout_width="wrap_content"
-				android:layout_height="wrap_content" 
-				android:textSize="14dip" android:typeface="sans"
-				android:shadowColor="#FFFFFF" />
-		</LinearLayout>
-	</LinearLayout>
-
-	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		 android:layout_width="wrap_content"
-		android:layout_height="wrap_content">
-
+			android:src="@drawable/incoming" android:scaleType="fitStart" />
+		<TextView android:id="@+id/incoming" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:textSize="14dip"
+			android:typeface="sans" android:shadowColor="#FFFFFF" />
+	</TableRow>
+	<TableRow>
 		<ImageView android:id="@+id/outgoingImage"
 			android:layout_width="wrap_content" android:layout_height="fill_parent"
-			 android:src="@drawable/outgoing" android:scaleType="fitStart"/>
-		<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			android:orientation="vertical" 
-			android:layout_width="wrap_content" android:layout_height="wrap_content">
-			<TextView android:id="@+id/outgoing" android:layout_width="wrap_content"
-				android:layout_height="wrap_content" 
-				android:textSize="14dip" android:typeface="sans"
-				android:shadowColor="#FFFFFF" />
-		</LinearLayout>
-	</LinearLayout>
-
-	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		 android:layout_width="wrap_content"
-		android:layout_height="wrap_content">
-
+			android:src="@drawable/outgoing" android:scaleType="fitStart" />
+		<TextView android:id="@+id/outgoing" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:textSize="14dip"
+			android:typeface="sans" android:shadowColor="#FFFFFF" />
+	</TableRow>
+	<TableRow>
 		<ImageView android:id="@+id/missedImage"
 			android:layout_width="wrap_content" android:layout_height="fill_parent"
-			 android:src="@drawable/missed" android:scaleType="fitStart"/>
-		<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			android:orientation="vertical" 
-			android:layout_width="wrap_content" android:layout_height="wrap_content">
-			<TextView android:id="@+id/missed" android:layout_width="wrap_content"
-				android:layout_height="wrap_content" 
-				android:textSize="14dip" android:typeface="sans"
-				android:shadowColor="#FFFFFF" />
-		</LinearLayout>
-	</LinearLayout>
-	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		 android:layout_width="wrap_content"
-		android:layout_height="wrap_content">
-
+			android:src="@drawable/missed" android:scaleType="fitStart" />
+		<TextView android:id="@+id/missed" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:textSize="14dip"
+			android:typeface="sans" android:shadowColor="#FFFFFF" />
+	</TableRow>
+	<TableRow>
 		<ImageView android:id="@+id/inboxImage"
 			android:layout_width="wrap_content" android:layout_height="fill_parent"
-			 android:src="@drawable/message" android:scaleType="fitStart" />
-		<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			android:orientation="vertical" 
-			android:layout_width="wrap_content" android:layout_height="wrap_content">
-			<TextView android:id="@+id/inbox" android:layout_width="wrap_content"
-				android:layout_height="wrap_content" 
-				android:textSize="14dip" android:typeface="sans"
-				android:shadowColor="#FFFFFF" />
-		</LinearLayout>
-	</LinearLayout>
-
-	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content">
+			android:src="@drawable/message" android:scaleType="fitStart" />
+		<TextView android:id="@+id/inbox" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:textSize="14dip"
+			android:typeface="sans" android:shadowColor="#FFFFFF" />
+	</TableRow>
+	<TableRow>
 		<ImageView android:id="@+id/inboxImage"
 			android:layout_width="fill_parent" android:layout_height="fill_parent"
-			 android:src="@drawable/message" android:scaleType="fitStart" />
-		<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			android:orientation="vertical" 
-			android:layout_width="wrap_content" android:layout_height="wrap_content">
-			<TextView android:id="@+id/send" android:layout_width="wrap_content"
-				android:layout_height="wrap_content" 
-				android:textSize="14dip" android:typeface="sans"
-				android:shadowColor="#FFFFFF" />
-		</LinearLayout>
-	</LinearLayout>
-</LinearLayout>
-
+			android:src="@drawable/message" android:scaleType="fitStart" />
+		<TextView android:id="@+id/send" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:textSize="14dip"
+			android:typeface="sans" android:shadowColor="#FFFFFF" />
+	</TableRow>
+</TableLayout>

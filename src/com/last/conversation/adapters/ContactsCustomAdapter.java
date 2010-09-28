@@ -44,15 +44,13 @@ public class ContactsCustomAdapter extends ArrayAdapter<UserContacts>{
 		//TODO Need to refactor this code
 		if(contact != null) {
 			TextView name = (TextView) convertView.findViewById(R.id.name);
-			TextView phoneNumber = (TextView) convertView.findViewById(R.id.phone_number);
 			TextView incoming = (TextView) convertView.findViewById(R.id.incoming);
 			TextView outgoing = (TextView) convertView.findViewById(R.id.outgoing);
 			TextView missed = (TextView) convertView.findViewById(R.id.missed);
 			TextView inbox = (TextView) convertView.findViewById(R.id.inbox);
 			TextView send = (TextView) convertView.findViewById(R.id.send);
 			ImageView imageView = (ImageView) convertView.findViewById(R.id.image);
-			name.setText(contact.getDisplayName());
-			phoneNumber.setText(contact.getPhoneNumber());
+			name.setText(contact.getDisplayName()+"\n"+contact.getPhoneNumber());
 			inbox.setText(contact.getReceivedMessage());
 			send.setText(contact.getSentMessage());
 			if(contact.getContactPhoto() == null ){
