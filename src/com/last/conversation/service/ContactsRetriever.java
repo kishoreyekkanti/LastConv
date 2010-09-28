@@ -92,6 +92,7 @@ public class ContactsRetriever {
 				setDisplayNameAndContactId(contacts, uContact);
 				if (isContactHavePhoneNumber(contacts)
 						&& shouldFetchPhoneDetails) {
+					Log.d(LOG_TAG,"Contact have phone numbers. Fetching phone numbers and call details..");
 					Cursor pCur = fetchPhoneNumber(uContact.getId());
 					setCallDetails(uContact, pCur);
 					pCur.close();
@@ -109,7 +110,7 @@ public class ContactsRetriever {
 		return contentResolver.query(
 				ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
 				ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-				new String[] { String.valueOf(contactId) }, null);
+				new String[] { String.valueOf(contactId) }, ContactsContract.CommonDataKinds.Phone.LAST_TIME_CONTACTED);
 	}
 
 	private void setSMS(UserContacts uContact) {
@@ -197,7 +198,7 @@ public class ContactsRetriever {
 	}
 
 	private void setCallDetails(UserContacts uContact, Cursor pCur) {
-		while (pCur.moveToNext()) {
+		if (pCur.moveToNext()) {
 			String number = pCur
 					.getString(pCur
 							.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
@@ -205,7 +206,7 @@ public class ContactsRetriever {
 								 ContactsContract.CommonDataKinds.Phone.LAST_TIME_CONTACTED)));
 			uContact.setPhoneNumber(number);
 			uContact.setLastContacted(lastContacted);
-			Log.d(LOG_TAG, "Number::" + number);
+			Log.d(LOG_TAG, "Last Contacted::" + lastContacted);
 		}
 	}
 
