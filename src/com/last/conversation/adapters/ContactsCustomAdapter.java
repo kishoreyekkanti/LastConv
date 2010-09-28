@@ -50,7 +50,8 @@ public class ContactsCustomAdapter extends ArrayAdapter<UserContacts>{
 			TextView inbox = (TextView) convertView.findViewById(R.id.inbox);
 			TextView send = (TextView) convertView.findViewById(R.id.send);
 			ImageView imageView = (ImageView) convertView.findViewById(R.id.image);
-			name.setText(contact.getDisplayName()+"\n"+contact.getPhoneNumber());
+			String phoneNumber = contact.getPhoneNumber() != null ? contact.getPhoneNumber() : "";
+			name.setText(contact.getDisplayName()+"\n"+phoneNumber);
 			inbox.setText(contact.getReceivedMessage());
 			send.setText(contact.getSentMessage());
 			if(contact.getContactPhoto() == null ){
