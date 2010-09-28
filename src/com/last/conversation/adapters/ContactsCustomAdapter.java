@@ -55,7 +55,12 @@ public class ContactsCustomAdapter extends ArrayAdapter<UserContacts>{
 			phoneNumber.setText(contact.getPhoneNumber());
 			inbox.setText(contact.getReceivedMessage());
 			send.setText(contact.getSentMessage());
-			imageView.setImageResource(R.drawable.user);
+			if(contact.getContactPhoto() == null ){
+				imageView.setImageResource(R.drawable.user);
+			}
+			else{
+				imageView.setImageBitmap(contact.getContactPhoto());			
+			}
 			incoming.setText("");
 			outgoing.setText("");
 			missed.setText("");

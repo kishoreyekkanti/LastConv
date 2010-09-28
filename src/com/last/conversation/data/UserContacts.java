@@ -2,8 +2,11 @@ package com.last.conversation.data;
 
 import java.util.Date;
 
+import android.graphics.Bitmap;
+
 public class UserContacts {
 	
+	Bitmap contactPhoto;
 	int id;
 	String phoneNumber;
 	String displayName;
@@ -74,6 +77,11 @@ public class UserContacts {
 	public String getDisplayName() {
 		return displayName;
 	}
-	
+	public Bitmap getContactPhoto() {
+		return contactPhoto;
+	}
+	public void setContactPhoto(Bitmap contactPhoto) {
+		this.contactPhoto = contactPhoto;
+	}	
 
 }
